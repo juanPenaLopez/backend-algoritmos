@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Aplicación Flask</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        nav {
+            margin-bottom: 20px;
+        }
+        nav a {
+            margin: 0 10px;
+            text-decoration: none;
+            font-weight: bold;
+            color: #333;
+        }
+        nav a:hover {
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Menú de navegación -->
+    <nav>
+        <a href="/">Inicio</a>
+        <a href="./grafica1.html">Vista 1</a>
+        <a href="/vista2">Vista 2</a>
+    </nav>
+
+    <!-- Contenido dinámico -->
+    {% block content %}
+    {% endblock %}
+
+</body>
+</html>
