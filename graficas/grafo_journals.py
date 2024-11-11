@@ -1,4 +1,3 @@
-import pandas as pd
 import random
 import networkx as nx
 import matplotlib.pyplot as plt
@@ -55,9 +54,17 @@ class GrafoJournals:
 
     # Función para generar y mostrar el grafo
     def generar_grafo(self):
+        # Obtener los 10 journals con más publicaciones
         top_journals = self.obtener_journals_mas_publicados()
+
+        # Seleccionar solo 5 journals aleatoriamente
+        top_journals = top_journals.sample(1)
+
         self.generar_citaciones_aleatorias()
         self.asignar_paises_aleatorios()
+
+        # Obtener los 15 artículos más citados de cada journal seleccionado
         articulos_top_15 = self.obtener_articulos_mas_citados_por_journal(top_journals)
         G = self.crear_grafo(articulos_top_15)
+        
         return G

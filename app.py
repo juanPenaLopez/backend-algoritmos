@@ -191,7 +191,7 @@ def obtener_journals_mas_frecuentes():
         conteo_journals = df_global['journal'].value_counts().nlargest(15)  # Obtener los 15 más frecuentes
         
         # Crear gráfico de barras horizontales
-        fig, ax = plt.subplots(figsize=(10, 6))
+        fig, ax = plt.subplots(figsize=(16, 6))
         conteo_journals.plot(kind='barh', color='skyblue', ax=ax)
         ax.set_xlabel('Cantidad de apariciones')
         ax.set_ylabel('Journals')
@@ -209,7 +209,6 @@ def obtener_journals_mas_frecuentes():
 
 @app.route('/frecuencia-apariciones', methods=['GET'])
 def mostrar_frecuencia_apariciones():
-
     # Instancia de la clase FrecuenciaAparicion
     frecuencia_aparicion = FrecuenciaAparicion(df_global)
 
@@ -219,32 +218,24 @@ def mostrar_frecuencia_apariciones():
     # Crear la tabla pivot
     pivot_table = frecuencia_aparicion.crear_pivot_table(df_frecuencias)
 
-    # Graficar la tabla pivot
-    frecuencia_aparicion.graficar_pivot_table(pivot_table)
+    # Graficar la tabla pivot y obtener la imagen como un archivo en memoria
+    img = frecuencia_aparicion.graficar_pivot_table(pivot_table)
     
-    # Guardar el grafo en un buffer de memoria y enviarlo como archivo de imagen
-    img = io.BytesIO()
-    plt.savefig(img, format='PNG')
-    img.seek(0)
-    plt.close()
-
+    # Enviar la imagen como respuesta HTTP
     return send_file(img, mimetype='image/png')
 
 @app.route('/grafo_journals')
 def mostrar_grafo_journals():
-
-    # Instancia de la clase GrafoJournals
     grafo_service = GrafoJournals(df_global)
 
-    # Generar el grafo
     G = grafo_service.generar_grafo()
 
-    # Dibujar el grafo
+    plt.switch_backend('Agg')
+
     plt.figure(figsize=(12, 8))
     pos = nx.spring_layout(G)
     nx.draw(G, pos, with_labels=True, node_size=3000, node_color='lightblue', font_size=10, font_weight='bold')
-    
-    # Guardar el grafo en un buffer de memoria y enviarlo como archivo de imagen
+
     img = io.BytesIO()
     plt.savefig(img, format='PNG')
     img.seek(0)
@@ -261,10 +252,11 @@ def nube():
     # Contar las frecuencias
     frecuencias = nube_palabras.contar_frecuencias()
     
-    # Generar la nube de palabras
-    nube_palabras.generar_nube_palabras(frecuencias)
+    # Generar la nube de palabras y obtener el buffer de imagen
+    img = nube_palabras.generar_nube_palabras(frecuencias)
     
-    return "Nube de palabras generada y mostrada."
+    # Enviar la imagen al cliente
+    return send_file(img, mimetype='image/png')
 
 if __name__ == '__main__':
     # Iniciar el servidor Flask

@@ -7,6 +7,7 @@ from nltk.corpus import wordnet
 from tqdm import tqdm
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
+import io
 
 class NubePalabras:
     def __init__(self, df):
@@ -201,8 +202,13 @@ class NubePalabras:
     def generar_nube_palabras(self, frecuencia_palabras):
         nube_palabras = WordCloud(width=800, height=400, background_color="white", max_words=100)
         nube_palabras.generate_from_frequencies(frecuencia_palabras)
-        
+    
+        img = io.BytesIO()
         plt.figure(figsize=(10, 5))
         plt.imshow(nube_palabras, interpolation="bilinear")
         plt.axis("off")
-        plt.show()
+        plt.savefig(img, format='PNG')
+        plt.close()
+        img.seek(0)
+        
+        return img
