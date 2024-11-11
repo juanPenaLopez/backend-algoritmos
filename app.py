@@ -13,12 +13,15 @@ import base64
 from graficas.grafo_journals import GrafoJournals
 import networkx as nx
 from graficas.requeriment3 import FrecuenciaAparicion
+import os
 
 app = Flask(__name__)
 CORS(app)  # Habilita CORS si es necesario
 
 # Variable global para almacenar el DataFrame cargado
 df_global = None
+
+port = int(os.environ.get("PORT", 5000))
 
 # Ejecutamos la inicialización cuando arranca el servidor
 def inicializar_datos():
