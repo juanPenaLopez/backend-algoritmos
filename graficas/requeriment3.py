@@ -5,6 +5,7 @@ import re
 import matplotlib.pyplot as plt
 import seaborn as sns
 from nltk.corpus import wordnet as wn
+import io
 
 # Descargar WordNet si aún no lo has hecho
 nltk.download('wordnet')
@@ -92,8 +93,19 @@ class FrecuenciaAparicion:
     def obtener_frecuencias(self):
         df_habilidades = self.contar_frecuencias(self.habilidades, "Habilidades")
         df_conceptos = self.contar_frecuencias(self.conceptos_computacionales, "Conceptos Computacionales")
+        df_actitudes = self.contar_frecuencias(self.actitudes, "Actitudes")
+        df_propiedad = self.contar_frecuencias(self.propiedad_psicometricas, "Propiedades psicométricas")
+        df_herramienta = self.contar_frecuencias(self.herramienta_evaluacion, "Herramienta de evaluación")
+        df_diseno = self.contar_frecuencias(self.diseno_investigacion, "Diseño de investigación")
+        df_nivel = self.contar_frecuencias(self.nivel_escolaridad, "Nivel de escolaridad")
+        df_medio = self.contar_frecuencias(self.medio, "Medio")
+        df_estrategia = self.contar_frecuencias(self.estrategia, "Estrategia")
+        df_herramientas = self.contar_frecuencias(self.herramienta, "Herramienta")
+
         # Combinar todas las categorías en un solo DataFrame
-        df_frecuencias = pd.concat([df_habilidades, df_conceptos], ignore_index=True)
+        df_frecuencias = pd.concat([df_habilidades, df_conceptos, df_actitudes, df_propiedad,
+                                    df_herramienta, df_diseno, df_nivel, df_medio, df_estrategia,
+                                    df_herramientas], ignore_index=True)
         return df_frecuencias
 
     # Crear una pivot_table que agrupe los términos por categoría
@@ -103,9 +115,17 @@ class FrecuenciaAparicion:
 
     # Función para graficar la pivot_table
     def graficar_pivot_table(self, pivot_table):
-        plt.figure(figsize=(10, 6))
+        # Crear la figura
+        plt.figure(figsize=(14, 10))  # Ajustar el tamaño según los datos
         sns.heatmap(pivot_table, annot=True, cmap="Blues", cbar=True)
         plt.title('Frecuencia de términos por categoría')
         plt.xlabel('Categoría')
         plt.ylabel('Término')
-        plt.show()
+        
+        # Guardar el gráfico en un buffer de memoria
+        img = io.BytesIO()
+        plt.savefig(img, format='PNG', bbox_inches='tight')  # Ajuste para que se recorte bien la imagen
+        img.seek(0)  # Volver al principio del buffer
+        plt.close()  # Cerrar la figura para liberar recursos
+
+        return img  # Devolver el archivo de imagen en memoria
