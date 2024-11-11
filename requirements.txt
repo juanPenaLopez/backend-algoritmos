@@ -19,3 +19,4 @@ gunicorn
 networkx
 nltk
 seaborn
+plotly
