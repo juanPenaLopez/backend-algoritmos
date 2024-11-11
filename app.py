@@ -20,6 +20,32 @@ CORS(app)  # Habilita CORS si es necesario
 # Variable global para almacenar el DataFrame cargado
 df_global = None
 
+# Ejecutamos la inicialización cuando arranca el servidor
+def inicializar_datos():
+    global df_global
+    df_global = cargar_datos_bibtex('archivo_combinado.bib')
+
+# Función para leer el archivo .bib y convertirlo en un DataFrame
+def cargar_datos_bibtex(archivo):
+    try:
+        # Abrir el archivo con la codificación 'utf-8'
+        with open(archivo, encoding='utf-8') as bibtex_file:
+            bib_database = bibtexparser.load(bibtex_file)
+        entries = bib_database.entries
+        df = pd.DataFrame(entries)
+        print("Archivo .bib cargado exitosamente.")
+        return df
+    except Exception as e:
+        print(f"Error al cargar el archivo .bib: {str(e)}")
+        return None
+
+if __name__ == '__main__':
+    # Cargar los datos antes de iniciar el servidor
+    inicializar_datos()
+
+    # Iniciar el servidor Flask
+    app.run(debug=True)
+
 @app.route('/', methods=['GET'])
 def home1():
     return render_template('base.html')
@@ -53,20 +79,6 @@ def process_bibtex():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
-# Función para leer el archivo .bib y convertirlo en un DataFrame
-def cargar_datos_bibtex(archivo):
-    try:
-        # Abrir el archivo con la codificación 'utf-8'
-        with open(archivo, encoding='utf-8') as bibtex_file:
-            bib_database = bibtexparser.load(bibtex_file)
-        entries = bib_database.entries
-        df = pd.DataFrame(entries)
-        print("Archivo .bib cargado exitosamente.")
-        return df
-    except Exception as e:
-        print(f"Error al cargar el archivo .bib: {str(e)}")
-        return None
 
 @app.route('/autores_mas_citados', methods=['GET'])
 def autores_mas_citados():
@@ -148,10 +160,7 @@ def generar_grafico_productos_por_ano(df):
     # Convertir la figura a HTML para mostrar en la web
     return pio.to_html(fig, full_html=False)
 
-# Ejecutamos la inicialización cuando arranca el servidor
-def inicializar_datos():
-    global df_global
-    df_global = cargar_datos_bibtex('archivo_combinado.bib')
+
 
 @app.route('/grafica/tipo-productos', methods=['GET'])
 def obtener_tipo_producto():
@@ -197,14 +206,11 @@ def obtener_journals_mas_frecuentes():
     else:
         return jsonify({"error": "Error al cargar los datos del archivo .bib"}), 500
 
-# Instancia de la clase GrafoJournals
-grafo_service = GrafoJournals(df_global)
-
-# Instancia de la clase FrecuenciaAparicion
-frecuencia_aparicion = FrecuenciaAparicion(df_global)
-
 @app.route('/frecuencia-apariciones', methods=['GET'])
 def mostrar_frecuencia_apariciones():
+
+    # Instancia de la clase FrecuenciaAparicion
+    frecuencia_aparicion = FrecuenciaAparicion(df_global)
 
     # Obtener frecuencias
     df_frecuencias = frecuencia_aparicion.obtener_frecuencias()
@@ -225,6 +231,10 @@ def mostrar_frecuencia_apariciones():
 
 @app.route('/grafo_journals')
 def mostrar_grafo_journals():
+
+    # Instancia de la clase GrafoJournals
+    grafo_service = GrafoJournals(df_global)
+
     # Generar el grafo
     G = grafo_service.generar_grafo()
 
@@ -240,10 +250,3 @@ def mostrar_grafo_journals():
     plt.close()
 
     return send_file(img, mimetype='image/png')
-
-if __name__ == '__main__':
-    # Cargar los datos antes de iniciar el servidor
-    inicializar_datos()
-
-    # Iniciar el servidor Flask
-    app.run(debug=True)
