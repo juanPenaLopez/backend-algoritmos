@@ -14,6 +14,7 @@ from graficas.grafo_journals import GrafoJournals
 import networkx as nx
 from graficas.requeriment3 import FrecuenciaAparicion
 import os
+from graficas.nube_palabras import NubePalabras
 
 app = Flask(__name__)
 CORS(app)  # Habilita CORS si es necesario
@@ -250,6 +251,20 @@ def mostrar_grafo_journals():
     plt.close()
 
     return send_file(img, mimetype='image/png')
+
+@app.route('/nube', methods=['GET'])
+def nube():
+    
+    # Crear una instancia de la clase NubePalabras
+    nube_palabras = NubePalabras(df_global)
+    
+    # Contar las frecuencias
+    frecuencias = nube_palabras.contar_frecuencias()
+    
+    # Generar la nube de palabras
+    nube_palabras.generar_nube_palabras(frecuencias)
+    
+    return "Nube de palabras generada y mostrada."
 
 if __name__ == '__main__':
     # Iniciar el servidor Flask
