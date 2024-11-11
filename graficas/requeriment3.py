@@ -16,15 +16,39 @@ class FrecuenciaAparicion:
         self.df = df
         self.habilidades = ['Abstraction', 'Algorithm', 'Algorithmic thinking', 'Coding', 'Collaboration', 'Cooperation', 'Creativity', 'Critical thinking', 'Debug', 'Decomposition', 'Evaluation', 'Generalization', 'Logic', 'Logical thinking', 'Modularity', 'Patterns recognition', 'Problem solving', 'Programming', 'Representation', 'Reuse', 'Simulation']
         self.conceptos_computacionales = ['Conditionals', 'Control structures', 'Directions', 'Events', 'Functions', 'Loops', 'Modular structure', 'Parallelism', 'Sequences', 'Software/hardware', 'Variables']
+        self.actitudes = ['emotional', 'engagement', 'motivation', 'perceptions', 'persistence', 'self efficacy', 'self perceived']
+        self.propiedad_psicometricas = ['classical test theory', 'confirmatory factor analysis', 'exploratory factor analysis', 'item response theory', 'reliability', 'structural equation model', 'validity']
+        self.herramienta_evaluacion = ['bctt', 'escas', 'cctt', 'ctst', 'cta-ces', 'ctc', 'ctls', 'cts', 'ctt-es', 'ctt-lp', 'capct', 'ict', 'competency test', 'self-efficacy scale', 'stem las']
+        self.diseno_investigacion = ['experimental', 'longitudinal research', 'mixed methods', 'post-test', 'pre-test', 'quasi-experiments', 'no experimental']
+        self.nivel_escolaridad = ['upper elementary education', 'primary school', 'early childhood education', 'secondary school', 'high school', 'university', 'college']
+        self.medio = ['block programming', 'mobile application', 'pair programming', 'plugged activities', 'programming', 'robotics', 'spreadsheet', 'stem', 'unplugged activities']
+        self.estrategia = ['construct-by-self mind mapping', 'design-based learning', 'gamification', 'reverse engineering', 'technology-enhanced learning', 'collaborative learning', 'cooperative learning', 'flipped classroom', 'game-based learning', 'inquiry-based learning', 'personalized learning', 'problem-based learning', 'project-based learning', 'universal design for learning']
+        self.herramienta = ['alice', 'arduino', 'scratch', 'scratchJr', 'blockly Games', 'code.org', 'codecombat', 'CSUnplugged', 'Robot Turtles', 'Hello Ruby', 'Kodable', 'LightbotJr', 'KIBO robots', 'BEE BOT', 'CUBETTO', 'Minecraft', 'Agent Sheets', 'Mimo', 'Py–Learn', 'SpaceChem']
 
         # Crear los diccionarios de sinónimos para habilidades y conceptos
         self.synonyms_habilidades = self.build_synonym_dict(self.habilidades)
         self.synonyms_conceptos = self.build_synonym_dict(self.conceptos_computacionales)
+        self.synonyms_actitudes = self.build_synonym_dict(self.actitudes)
+        self.synonyms_propiedad_psicometrica = self.build_synonym_dict(self.propiedad_psicometricas)
+        self.synonyms_herramienta_evaluacion = self.build_synonym_dict(self.herramienta_evaluacion)
+        self.synonyms_diseno_investigacion = self.build_synonym_dict(self.diseno_investigacion)
+        self.synonyms_nivel_escolaridad = self.build_synonym_dict(self.nivel_escolaridad)
+        self.synonyms_medio = self.build_synonym_dict(self.medio)
+        self.synonyms_estrategia = self.build_synonym_dict(self.estrategia)
+        self.synonyms_herramienta = self.build_synonym_dict(self.herramienta)
 
         # Aplicar limpieza y unificación de sinónimos a los resúmenes (abstracts)
         self.df['cleaned_abstract'] = self.df['abstract'].apply(self.clean_text)
         self.df['cleaned_abstract'] = self.df['cleaned_abstract'].apply(lambda x: self.unify_synonyms(x, self.synonyms_habilidades))
         self.df['cleaned_abstract'] = self.df['cleaned_abstract'].apply(lambda x: self.unify_synonyms(x, self.synonyms_conceptos))
+        self.df['cleaned_abstract'] = self.df['cleaned_abstract'].apply(lambda x: self.unify_synonyms(x, self.synonyms_actitudes))
+        self.df['cleaned_abstract'] = self.df['cleaned_abstract'].apply(lambda x: self.unify_synonyms(x, self.synonyms_propiedad_psicometrica))
+        self.df['cleaned_abstract'] = self.df['cleaned_abstract'].apply(lambda x: self.unify_synonyms(x, self.synonyms_herramienta_evaluacion))
+        self.df['cleaned_abstract'] = self.df['cleaned_abstract'].apply(lambda x: self.unify_synonyms(x, self.synonyms_diseno_investigacion))
+        self.df['cleaned_abstract'] = self.df['cleaned_abstract'].apply(lambda x: self.unify_synonyms(x, self.synonyms_nivel_escolaridad))
+        self.df['cleaned_abstract'] = self.df['cleaned_abstract'].apply(lambda x: self.unify_synonyms(x, self.synonyms_medio))
+        self.df['cleaned_abstract'] = self.df['cleaned_abstract'].apply(lambda x: self.unify_synonyms(x, self.synonyms_estrategia))
+        self.df['cleaned_abstract'] = self.df['cleaned_abstract'].apply(lambda x: self.unify_synonyms(x, self.synonyms_herramienta))
 
     # Función para limpiar el texto (lowercase y eliminar caracteres especiales)
     def clean_text(self, text):
@@ -85,20 +109,3 @@ class FrecuenciaAparicion:
         plt.xlabel('Categoría')
         plt.ylabel('Término')
         plt.show()
-
-# Uso de la clase
-
-# Cargar tus datos en un DataFrame (ejemplo)
-# df = pd.read_csv('tu_archivo.csv')
-
-# Instanciar la clase con el DataFrame
-# fa = FrecuenciaAparicion(df)
-
-# Obtener las frecuencias de habilidades y conceptos computacionales
-# df_frecuencias = fa.obtener_frecuencias()
-
-# Crear la tabla pivot
-# pivot_table = fa.crear_pivot_table(df_frecuencias)
-
-# Graficar la tabla pivot
-# fa.graficar_pivot_table(pivot_table)
