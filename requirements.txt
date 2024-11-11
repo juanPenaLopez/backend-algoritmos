@@ -12,8 +12,10 @@ SQLAlchemy==2.0.35
 typing_extensions==4.12.2
 Werkzeug==3.0.4
 bibtexparser==1.1.0
-numpy==2.1.2
+numpy==1.24.3
 pandas==2.2.3
-matplotlib==3.7.1
+matplotlib==3.7.3
 gunicorn
 networkx
+nltk
+seaborn

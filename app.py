@@ -12,6 +12,7 @@ import io
 import base64
 from graficas.grafo_journals import GrafoJournals
 import networkx as nx
+from graficas.requeriment3 import FrecuenciaAparicion
 
 app = Flask(__name__)
 CORS(app)  # Habilita CORS si es necesario
@@ -198,6 +199,29 @@ def obtener_journals_mas_frecuentes():
 
 # Instancia de la clase GrafoJournals
 grafo_service = GrafoJournals(df_global)
+
+# Instancia de la clase FrecuenciaAparicion
+frecuencia_aparicion = FrecuenciaAparicion(df_global)
+
+@app.route('/frecuencia-apariciones', methods=['GET'])
+def mostrar_frecuencia_apariciones():
+
+    # Obtener frecuencias
+    df_frecuencias = frecuencia_aparicion.obtener_frecuencias()
+
+    # Crear la tabla pivot
+    pivot_table = frecuencia_aparicion.crear_pivot_table(df_frecuencias)
+
+    # Graficar la tabla pivot
+    frecuencia_aparicion.graficar_pivot_table(pivot_table)
+    
+    # Guardar el grafo en un buffer de memoria y enviarlo como archivo de imagen
+    img = io.BytesIO()
+    plt.savefig(img, format='PNG')
+    img.seek(0)
+    plt.close()
+
+    return send_file(img, mimetype='image/png')
 
 @app.route('/grafo_journals')
 def mostrar_grafo_journals():
