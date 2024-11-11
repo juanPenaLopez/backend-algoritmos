@@ -8,13 +8,13 @@ WORKDIR /app
 COPY requirements.txt requirements.txt
 
 # Instalamos las dependencias necesarias
-#RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copiamos el resto de los archivos de la aplicación al contenedor
 COPY . .
 
-# Exponemos el puerto en el que la aplicación Flask correrá
+# Exponemos el puerto en el que la aplicación Flask correrá (aunque Render usará el puerto dinámicamente)
 EXPOSE 5000
 
 # Comando para ejecutar la aplicación Flask usando Gunicorn
-CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "app:app"]
+CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:$PORT", "app:app"]
