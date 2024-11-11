@@ -10,6 +10,8 @@ import plotly.graph_objs as go
 import plotly.io as pio
 import io
 import base64
+from graficas.grafo_journals import GrafoJournals
+import networkx as nx
 
 app = Flask(__name__)
 CORS(app)  # Habilita CORS si es necesario
@@ -193,6 +195,27 @@ def obtener_journals_mas_frecuentes():
         return send_file(img, mimetype='image/png', as_attachment=False)
     else:
         return jsonify({"error": "Error al cargar los datos del archivo .bib"}), 500
+
+# Instancia de la clase GrafoJournals
+grafo_service = GrafoJournals(df_global)
+
+@app.route('/grafo_journals')
+def mostrar_grafo_journals():
+    # Generar el grafo
+    G = grafo_service.generar_grafo()
+
+    # Dibujar el grafo
+    plt.figure(figsize=(12, 8))
+    pos = nx.spring_layout(G)
+    nx.draw(G, pos, with_labels=True, node_size=3000, node_color='lightblue', font_size=10, font_weight='bold')
+    
+    # Guardar el grafo en un buffer de memoria y enviarlo como archivo de imagen
+    img = io.BytesIO()
+    plt.savefig(img, format='PNG')
+    img.seek(0)
+    plt.close()
+
+    return send_file(img, mimetype='image/png')
 
 if __name__ == '__main__':
     # Cargar los datos antes de iniciar el servidor
