@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Vista 1</h1>
+    <p>Esta es la vista donde mostramos la gráfica de publicaciones por año.</p>
+    
+    <!-- Mostrar la gráfica generada por Flask -->
+    <img src="{{ url_for('grafica') }}" alt="Gráfica de Publicaciones por Año">
+{% endblock %}

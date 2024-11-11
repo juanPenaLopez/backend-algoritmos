@@ -14,4 +14,12 @@ Werkzeug==3.0.4
 bibtexparser==1.1.0
 numpy==2.1.2
 pandas==2.2.3
+<<<<<<< HEAD
 gunicorn
+=======
+<<<<<<< Updated upstream
+matplotlib==3.7.1
+=======
+gunicorn
+>>>>>>> Stashed changes
+>>>>>>> master
