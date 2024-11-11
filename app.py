@@ -253,4 +253,4 @@ def mostrar_grafo_journals():
 
 if __name__ == '__main__':
     # Iniciar el servidor Flask
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=port)
