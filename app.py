@@ -26,6 +26,7 @@ def inicializar_datos():
     df_global = cargar_datos_bibtex('archivo_combinado.bib')
 
 # Función para leer el archivo .bib y convertirlo en un DataFrame
+#@app.route('/cargarArchivo/<filename>', methods=['GET'])
 def cargar_datos_bibtex(archivo):
     try:
         # Abrir el archivo con la codificación 'utf-8'
@@ -39,12 +40,8 @@ def cargar_datos_bibtex(archivo):
         print(f"Error al cargar el archivo .bib: {str(e)}")
         return None
 
-if __name__ == '__main__':
-    # Cargar los datos antes de iniciar el servidor
-    inicializar_datos()
-
-    # Iniciar el servidor Flask
-    app.run(debug=True)
+# Cargar los datos antes de iniciar el servidor
+inicializar_datos()
 
 @app.route('/', methods=['GET'])
 def home1():
@@ -250,3 +247,7 @@ def mostrar_grafo_journals():
     plt.close()
 
     return send_file(img, mimetype='image/png')
+
+if __name__ == '__main__':
+    # Iniciar el servidor Flask
+    app.run(debug=True)
